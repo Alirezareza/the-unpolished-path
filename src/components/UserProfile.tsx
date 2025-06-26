@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Calendar, Users, MessageCircle, Share2, Edit } from 'lucide-react';
+import { MapPin, Calendar, Users, MessageCircle, Share2, Edit, Heart, Clock } from 'lucide-react';
 import { Author } from '../types/Story';
 
 interface UserProfileProps {
@@ -20,6 +20,47 @@ interface UserProfileProps {
 }
 
 const UserProfile = ({ user }: UserProfileProps) => {
+  // Mock recent stories for the user
+  const recentStories = [
+    {
+      id: '1',
+      title: 'How I Lost $50K in My First Startup and What I Learned',
+      timeAgo: '2 days ago',
+      category: 'startup',
+      likes: 234,
+      comments: 45,
+      preview: 'Three years ago, I was convinced I had the next big idea - a social platform for pet owners. I quit my job, invested my savings...'
+    },
+    {
+      id: '2',
+      title: 'The Product Launch That Nobody Wanted',
+      timeAgo: '1 week ago',
+      category: 'career',
+      likes: 156,
+      comments: 23,
+      preview: 'I spent 8 months building what I thought was the perfect product management tool. The launch day came and...'
+    },
+    {
+      id: '3',
+      title: 'Why I Turned Down My Dream Job Offer',
+      timeAgo: '2 weeks ago',
+      category: 'personal',
+      likes: 89,
+      comments: 12,
+      preview: 'Two years ago, I received an offer that seemed too good to be true - a 40% salary increase, equity, and the chance...'
+    }
+  ];
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'career': return 'bg-blue-100 text-blue-700';
+      case 'startup': return 'bg-green-100 text-green-700';
+      case 'technical': return 'bg-purple-100 text-purple-700';
+      case 'personal': return 'bg-pink-100 text-pink-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8">
       <div className="max-w-4xl mx-auto px-4 space-y-6">
@@ -128,10 +169,44 @@ const UserProfile = ({ user }: UserProfileProps) => {
           <CardHeader>
             <h2 className="text-xl font-semibold text-slate-800">Recent Failure Stories</h2>
           </CardHeader>
-          <CardContent>
-            <div className="text-center text-slate-500 py-8">
-              <p>Recent stories will appear here...</p>
-            </div>
+          <CardContent className="space-y-4">
+            {recentStories.map((story) => (
+              <div key={story.id} className="border-b border-slate-100 pb-4 last:border-b-0 last:pb-0">
+                <div className="flex items-start justify-between mb-2">
+                  <h3 className="font-semibold text-slate-800 text-lg hover:text-orange-600 cursor-pointer transition-colors">
+                    {story.title}
+                  </h3>
+                  <div className="flex items-center space-x-1 text-slate-500 text-sm">
+                    <Clock className="w-3 h-3" />
+                    <span>{story.timeAgo}</span>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-2 mb-3">
+                  <Badge className={getCategoryColor(story.category)}>
+                    {story.category}
+                  </Badge>
+                </div>
+                
+                <p className="text-slate-600 text-sm mb-3 leading-relaxed">
+                  {story.preview}
+                </p>
+                
+                <div className="flex items-center space-x-4 text-sm text-slate-500">
+                  <div className="flex items-center space-x-1">
+                    <Heart className="w-4 h-4" />
+                    <span>{story.likes} likes</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <MessageCircle className="w-4 h-4" />
+                    <span>{story.comments} comments</span>
+                  </div>
+                  <button className="text-orange-600 hover:text-orange-700 font-medium">
+                    Read full story
+                  </button>
+                </div>
+              </div>
+            ))}
           </CardContent>
         </Card>
       </div>
